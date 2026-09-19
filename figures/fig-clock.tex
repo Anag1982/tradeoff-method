@@ -1,0 +1,26 @@
+% The minute plan as a timeline.
+\begin{tikzpicture}[x=2.3mm,y=1mm, font=\scriptsize]
+  \foreach \s/\e/\c in {0/2/black!10, 2/8/black!22, 8/13/black!10, 13/15/black!22,
+            15/18/black!10, 18/28/black!22, 28/34/black!10, 34/43/black!22, 43/45/black!10} {
+    \fill[\c] (\s,0) rectangle (\e,8);
+    \draw[rule, line width=0.3pt] (\s,0) rectangle (\e,8);
+  }
+  \foreach \s/\e/\l in {2/8/Frame, 8/13/Budget, 18/28/Deepen, 28/34/Stress, 34/43/Questions} {
+    \node[text=ink, font=\scriptsize\bfseries] at ({(\s+\e)/2},4) {\l};
+  }
+  \node[text=ink, font=\tiny, rotate=90] at (1,4) {Listen};
+  \node[text=ink, font=\tiny, rotate=90] at (14,4) {Axes};
+  \node[text=ink, font=\tiny, rotate=90] at (16.5,4) {Commit};
+  \node[text=ink, font=\tiny, rotate=90] at (44,4) {Close};
+  \foreach \m in {0,2,8,13,15,18,28,34,43,45} {
+    \draw[rule] (\m,0) -- (\m,-1.5);
+    \node[text=rule, font=\tiny, below] at (\m,-1.5) {\m};
+  }
+  \node[text=rule, font=\tiny, below] at (22.5,-5) {minutes};
+  % artefacts above, on two levels
+  \foreach \x/\lvl/\t in {5/11/brief sheet, 10.5/18/envelope, 14/11/table, 16.5/25/decision lines{,} then the diagram,
+                          23/11/one mechanism{,} worked, 31/18/four attacks, 38.5/11/pushes answered from the board, 44/18/close} {
+    \draw[rule, line width=0.3pt] (\x,8) -- (\x,\lvl);
+    \node[text=ink, anchor=south, fill=white, inner sep=1pt] at (\x,\lvl) {\t};
+  }
+\end{tikzpicture}

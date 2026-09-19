@@ -1,0 +1,10 @@
+\begin{tikzpicture}[x=1mm,y=1mm,font=\scriptsize]
+\node[anchor=south] at (48,3) {\textit{consistency against latency}};
+\draw[ink,line width=0.6pt,{Bar[width=4pt]}-{Bar[width=4pt]}] (0,0) -- (96,0);
+\node[anchor=north,align=center,text width=30mm] at (4,-2) {\textbf{one end}\\every read from the leader; exact; a round trip per request};
+\node[anchor=north,align=center,text width=30mm] at (92,-2) {\textbf{other end}\\any replica; may lag; microseconds per request};
+\fill[accent] (68,0) circle (1.1);
+\draw[accent,-{Stealth[length=3pt]},line width=0.7pt] (68,12) -- (68,1.8);
+\node[text=accent,anchor=south,align=center] at (60,12.5) {where this brief points, and why: the objective is p95\\latency and the non-negotiable covers only a user's own writes};
+\node[text=rule,font=\tiny,anchor=north,align=center] at (48,-18) {a row of the table is a decision line waiting to be written: the two ends are\\the choice and the alternative, and the reason for the arrow is the ``because''};
+\end{tikzpicture}

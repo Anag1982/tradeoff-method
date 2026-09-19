@@ -1,0 +1,32 @@
+% The feasible region: constraints, the efficient edge, the optimum as a region.
+\begin{tikzpicture}[x=0.95mm,y=1mm, font=\scriptsize]
+  % feasible region (shaded), bounded by floor, ceiling, budget and the edge
+  \fill[black!9] (22,14) .. controls (36,8) and (58,5) .. (80,5) -- (80,42) -- (22,42) -- cycle;
+  % axes
+  \draw[-{Stealth[length=3pt]}, rule] (0,0) -- (90,0);
+  \node[text=ink, anchor=north east] at (90,-1) {cost per month};
+  \draw[-{Stealth[length=3pt]}, rule] (0,0) -- (0,54);
+  \node[text=ink, rotate=90, anchor=south] at (-1.5,27) {latency at p99};
+  % constraint lines
+  \draw[rule, dashed] (0,42) -- (86,42);
+  \node[text=ink, anchor=south east, align=right] at (78.5,42.6) {latency budget (the number)};
+  \draw[rule, dashed] (22,0) -- (22,50);
+  \node[text=ink, anchor=south, align=center] at (22,50.5) {organisational floor:\\what the team already runs};
+  \draw[rule, dashed] (80,0) -- (80,50);
+  \node[text=ink, anchor=south, align=center] at (80,50.5) {cost ceiling};
+  % efficient edge
+  \draw[accent, line width=0.9pt] (22,14) .. controls (36,8) and (58,5) .. (80,5);
+  \node[text=accent, anchor=south west] at (52,6.6) {the efficient edge};
+  % region label
+  \node[text=ink, align=center] at (46,26) {feasible region:\\every design that meets the brief};
+  % optimum region, X and Y
+  \fill[black!35] (31,10.7) ellipse (6 and 2.4);
+  \fill[ink] (28.5,11.4) circle (0.7);
+  \node[text=ink, anchor=south] at (28.5,12.4) {X};
+  \fill[ink] (34,10.1) circle (0.7);
+  \node[text=ink, anchor=south] at (34,11.1) {Y};
+  \node[text=ink, anchor=south west, align=left] at (33,15.5) {the optimum is a region;\\the decision line says why X over Y};
+  % catalogue point
+  \draw[ink, line width=0.5pt] (44,36) circle (0.9);
+  \node[text=ink, anchor=west, align=left] at (46,36) {the catalogue design:\\feasible, not efficient};
+\end{tikzpicture}
