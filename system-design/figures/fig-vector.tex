@@ -1,0 +1,20 @@
+\begin{tikzpicture}[archstyles]
+\node[actor] (q) at (2,8) {queries\\20k/s};
+\node[svc] (router) at (24,8) {router\\nearest centroids};
+\node[svc] (s1) at (66,22) {shard 1: graph index over\\1-byte vectors + fresh index};
+\node[svc] (s2) at (66,8) {shard 2: same};
+\node[actor] (dots) at (66,0) {$\cdots$};
+\node[svc] (sn) at (66,-9) {shard $n$: same};
+\node[svc] (merge) at (102,8) {merge\\top 100};
+\node[queue] (upd) at (24,-9) {updates\\12/s};
+\node[svc] (rebuild) at (66,-24) {nightly rebuild\\tombstones removed};
+\node[actor] (meas) at (102,-14) {daily: 1,000 queries\\against exact search;\\recall $\geq 0.95$ or alert};
+\draw[flow] (q) -- (router);
+\draw[flow] (router.east) -- (s1.west);
+\draw[flow] (router.east) -- node[lbl,above,align=center]{2 or 3 of\\$n$ shards} (s2.west);
+\draw[flow] (s1.east) -- (merge.west);
+\draw[flow] (s2.east) -- node[lbl,below]{hedged at 10~ms} (merge.west);
+\draw[async] (upd.east) -- node[lbl,above,align=center]{into the shard's\\fresh index} (sn.west);
+\draw[async] (rebuild.north) -- (sn.south);
+\node[note, text width=34mm, anchor=north] at (24,-16) {replicas per shard for hot regions; 256~GB a replica set};
+\end{tikzpicture}

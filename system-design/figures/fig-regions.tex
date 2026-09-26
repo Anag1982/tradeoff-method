@@ -1,0 +1,26 @@
+\begin{tikzpicture}[archstyles,
+  region/.style={draw=ink, line width=0.6pt, rounded corners=2pt, inner sep=0pt, fill=white},
+  cls/.style={draw=rule, line width=0.4pt, rounded corners=1.5pt, align=center, inner sep=2pt, text width=28mm, minimum height=8mm, fill=black!5}]
+% region boxes
+\node[region, minimum width=44mm, minimum height=42mm] (us) at (22,0) {};
+\node[region, minimum width=44mm, minimum height=42mm] (sg) at (86,0) {};
+\node[font=\scriptsize\bfseries, anchor=north] at (22,20) {US East (home)};
+\node[font=\scriptsize\bfseries, anchor=north] at (86,20) {Singapore};
+% classes
+\node[cls] (u1) at (22,11) {per-user data\\of users homed here: one writer};
+\node[cls] (c1) at (22,0)  {global catalogue\\(written here)};
+\node[cls] (k1) at (22,-11) {uniqueness keys\\hash range A};
+\node[cls] (u2) at (86,11) {per-user data\\of users homed here: one writer};
+\node[cls] (c2) at (86,0)  {catalogue replica\\seconds behind};
+\node[cls] (k2) at (86,-11) {uniqueness keys\\hash range B};
+% cross-region arrows
+\draw[async, <->] (u1.east) -- node[lbl,above,align=center]{async copy for recovery\\RPO: seconds of writes} (u2.west);
+\draw[async] (c1.east) -- node[lbl,above]{replicate, one way} (c2.west);
+\draw[flow, <->] (k1.east) -- node[lbl,above,align=center]{one round trip at signup\\200~ms, on the rarest path} (k2.west);
+% users
+\node[actor] (ua) at (22,-27) {70M users routed here};
+\node[actor] (ub) at (86,-27) {30M users routed here};
+\draw[flow] (ua) -- (us.south);
+\draw[flow] (ub) -- (sg.south);
+\node[note, text width=40mm] at (54,-27) {no request on a user's page crosses regions; a traveller pays 200~ms until re-homed};
+\end{tikzpicture}

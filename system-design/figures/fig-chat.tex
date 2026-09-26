@@ -1,0 +1,19 @@
+\begin{tikzpicture}[archstyles]
+\node[actor] (dev) at (4,18) {15M devices\\10M online};
+\node[svc] (gw) at (36,18) {gateways\\200k conns each\\$\sim$50 nodes};
+\node[svc] (msg) at (72,18) {message service\\persist, then sequence\\per conversation};
+\node[store] (store) at (106,18) {message store\\(Chapter 9)};
+\node[queue] (dstream) at (72,-6) {delivery stream\\partitioned by recipient};
+\node[svc] (dc) at (36,-6) {delivery\\consumers};
+\node[store] (reg) at (36,-25) {registry\\device$\to$gateway\\1.5~GB in memory};
+\node[ext] (push) at (6,-25) {push path\\(offline)};
+\draw[flow, <->] (dev) -- node[lbl,above]{100k/s} (gw);
+\draw[flow] (gw) -- node[lbl,above]{send} (msg);
+\draw[flow] (msg) -- node[lbl,above]{50~ms} node[lbl,below]{then ack} (store);
+\draw[async] (msg.south) -- node[lbl,right]{outbox} (dstream.north);
+\draw[async] (dstream) -- node[lbl,above]{300k/s} (dc);
+\draw[flow] (dc.north) -- node[lbl,right,align=left]{push to the\\recipient's gateway} (gw.south);
+\draw[flow] (dc.south) -- node[lbl,right]{lookup} (reg.north);
+\draw[async] (reg.west) -- node[lbl,above]{no entry} (push.east);
+\node[note, text width=40mm] at (78,-22) {gateways hold sockets and nothing else; presence is read from them, never heartbeated to a store};
+\end{tikzpicture}

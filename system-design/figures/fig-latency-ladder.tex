@@ -1,0 +1,17 @@
+\begin{tikzpicture}[x=1mm,y=1mm,font=\scriptsize]
+\draw[rule] (0,0) -- (98,0);
+\foreach \e/\t in {0/1~ns,3/1~$\mu$s,6/1~ms,9/1~s}{
+  \draw[rule] (\e*10.5,0) -- (\e*10.5,-1.5);
+  \node[text=rule,font=\tiny,below] at (\e*10.5,-1.5) {\t};
+}
+\foreach \e in {1,2,4,5,7,8}{\draw[rule,line width=0.3pt] (\e*10.5,0) -- (\e*10.5,-0.8);}
+% rungs: value, label, height, anchor
+\foreach \v/\t/\h/\a in {0/L1 cache/7/south, 2/main memory/7/south, 5/SSD random read/7/south east, 5.85/round trip in a data centre/17/south east, 6.7/disk seek/12/south, 7.5/same continent/27/south, 8/across an ocean/17/south, 8.3/Asia to US East/7/south west}{
+  \draw[ink,line width=0.4pt] (\v*10.5,0) -- (\v*10.5,\h);
+  \fill[ink] (\v*10.5,0) circle (0.6);
+  \node[text=ink,anchor=\a,inner sep=0.8pt] at (\v*10.5,\h) {\t};
+}
+\draw[accent,line width=0.6pt] (8*10.5,0) -- (8*10.5,-7);
+\node[text=accent,anchor=north east] at (8*10.5+3,-7.5) {100~ms: ``instant'' to a person};
+\node[text=rule,font=\tiny,anchor=north west] at (0,-8) {each decade is ten times the last};
+\end{tikzpicture}

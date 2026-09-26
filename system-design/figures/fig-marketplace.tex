@@ -1,0 +1,22 @@
+\begin{tikzpicture}[archstyles]
+\node[actor] (g) at (2,-3) {guests};
+\node[svc] (search) at (26,24) {search service};
+\node[store] (idx) at (66,24) {search index\\listing documents\\with availability bits};
+\node[svc] (page) at (26,4) {listing page};
+\node[dec] (book) at (26,-10) {booking\\one-listing transaction\\ten-minute hold};
+\node[store] (db) at (66,-3) {relational primary\\listings 25~GB\\availability 10~GB};
+\node[ext] (pay) at (66,-24) {payment provider};
+\node[queue] (out) at (100,-3) {outbox};
+\node[actor] (hosts) at (100,14) {hosts, email,\\the index};
+\draw[flow] (g) |- node[lbl,pos=0.75,above]{2,500/s} (search.west);
+\draw[flow] (search) -- node[lbl,above]{predicate query} (idx);
+\draw[flow] (g) |- node[lbl,pos=0.75,above]{page view} (page.west);
+\draw[flow] (page.east) -- node[lbl,above,align=center]{point read,\\fresh} (page.east -| db.west);
+\draw[flow] (g) |- node[lbl,pos=0.75,above]{25/s} (book.west);
+\draw[flow] (book.east) -- node[lbl,above,align=center]{serialised\\on the rows} (book.east -| db.west);
+\draw[flow] (book.south) |- node[lbl,pos=0.75,above]{authorise, synchronous} (pay.west);
+\draw[async] (db.north) -- node[lbl,right,align=left]{change data\\capture: seconds} (idx.south);
+\draw[async] (db) -- (out);
+\draw[async] (out) -- (hosts);
+\node[note, text width=34mm, anchor=west] at (84,-16) {the strong end is bought at one place: 25 transactions a second, each scoped to one listing};
+\end{tikzpicture}

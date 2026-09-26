@@ -1,0 +1,20 @@
+% The five-move loop with artefacts and the re-frame edge.
+\begin{tikzpicture}[
+  x=1mm,y=1mm,
+  move/.style={draw=accent, line width=0.6pt, rounded corners=1.5pt, align=center,
+               inner sep=0pt, minimum height=9mm, minimum width=18.5mm,
+               font=\footnotesize\bfseries, text=accent},
+  art/.style={align=center, font=\scriptsize, text=ink, text width=19mm, inner sep=0pt},
+  mins/.style={font=\tiny, text=rule, inner sep=0pt},
+  arr/.style={-{Stealth[length=3.5pt]}, draw=rule, line width=0.6pt}]
+\foreach \i/\name/\artefact/\t in {0/Frame/brief sheet/5--7 min, 1/Budget/envelope/5 min,
+    2/Axes/tradeoff table/2 min, 3/Commit/decision lines/3 min, 4/Stress/four attacks/5 min}{
+  \node[move] (m\i) at (\i*22.5,0) {\name};
+  \node[art, below=2.2mm of m\i] (a\i) {\artefact};
+  \node[mins, above=1.2mm of m\i] {\t};
+}
+\foreach \i/\j in {0/1,1/2,2/3,3/4}{\draw[arr] (m\i) -- (m\j);}
+\draw[arr] (a4.south) -- ++(0,-4) -| ($(a0.south)+(0,-4)$) -- (a0.south);
+\node[font=\scriptsize, text=rule, fill=white, inner sep=2pt] at (45,{-9-2.2-4-3.6})
+  {re-frame: an attack breaks the decision, and one line of the brief changes};
+\end{tikzpicture}

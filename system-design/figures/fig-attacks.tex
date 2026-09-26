@@ -1,0 +1,25 @@
+% The four attacks and the three outcomes, with the return edge.
+\begin{tikzpicture}[x=1mm,y=1mm,
+  box/.style={draw=accent, line width=0.6pt, rounded corners=1.5pt, align=center,
+              inner sep=2.5pt, font=\footnotesize\bfseries, text=accent, minimum height=8mm},
+  att/.style={draw=rule, line width=0.4pt, align=left, inner sep=2.5pt, font=\scriptsize,
+              text=ink, text width=27mm, minimum height=7mm},
+  outc/.style={draw=rule, line width=0.4pt, rounded corners=1.5pt, align=left, inner sep=2.5pt,
+              font=\scriptsize, text=ink, text width=33mm},
+  arr/.style={-{Stealth[length=3.5pt]}, draw=rule, line width=0.6pt}]
+\node[box, minimum width=20mm] (d) at (0,0) {Decision\\line};
+\node[att] (a1) at (33,14)  {\textbf{1.} What fails first?};
+\node[att] (a2) at (33,4.7) {\textbf{2.} Ten times the load?};
+\node[att] (a3) at (33,-4.7){\textbf{3.} What does it cost then?};
+\node[att] (a4) at (33,-14) {\textbf{4.} Who gets paged?};
+\foreach \i in {1,2,3,4}{\draw[arr] (d.east) -- (a\i.west);}
+% bus
+\draw[rule, line width=0.6pt] (52,14) -- (52,-14);
+\foreach \i in {1,2,3,4}{\draw[rule, line width=0.6pt] (a\i.east) -- (52,{14-9.3*(\i-1)});}
+\node[font=\scriptsize, text=rule, align=center, fill=white, inner sep=1.5pt] at (56.5,20) {each attack\\ends in one of};
+\node[outc] (o1) at (79,13)  {\textbf{Hold.} The price was already named. Say so.};
+\node[outc] (o2) at (79,0)   {\textbf{Addition.} A piece is added; the decision line gains a clause.};
+\node[outc] (o3) at (79,-13) {\textbf{Re-frame.} A constraint the decision rested on does not hold. Back to the brief.};
+\foreach \j in {1,2,3}{\draw[arr] (52,{13-13*(\j-1)}) -- (o\j.west);}
+\draw[arr] (o3.south) -- ++(0,-4.5) -| node[pos=0.25, below, font=\scriptsize, text=rule] {return edge: one line of the brief changes and one decision is remade} (d.south);
+\end{tikzpicture}

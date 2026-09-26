@@ -1,0 +1,17 @@
+\begin{tikzpicture}[archstyles,
+  st/.style={draw=ink, line width=0.5pt, rounded corners=3pt, align=center, inner sep=3pt, minimum height=8mm, fill=white, font=\scriptsize\itshape}]
+\node[st] (intent) at (-2,0) {intent\\keyed by order};
+\node[dec, rounded corners=3pt] (req) at (48,0) {requested\\committed before the call};
+\node[ext] (prov) at (48,22) {provider, 5,000/s};
+\node[st] (ok) at (100,12) {succeeded\\+ two ledger entries\\in one transaction};
+\node[st] (fail) at (86,-11) {failed};
+\node[st] (pend) at (48,-22) {pending\\shown to the customer};
+\draw[flow] (intent) -- node[lbl,above,align=center]{a repeat with the\\same key returns\\this record} (req);
+\draw[flow] (req.north) -- node[lbl,left,align=right]{charge, with the\\idempotency key} (prov.south);
+\draw[flow] (prov.east) -| node[lbl,pos=0.25,above]{definite answer} (ok.north);
+\draw[flow] (req.east) -- ++(2,0) |- node[lbl,pos=0.85,below]{declined} (fail.west);
+\draw[flow, dashed] (req.south) -- node[lbl,left,align=right]{timeout:\\outcome unknown} (pend.north);
+\draw[flow, dashed] (pend.east) -| node[lbl,pos=0.3,above,align=center]{query by key, with backoff:\\never a second charge without it} (ok.south);
+\node[lbl] at (100,-2) {resolved};
+\node[note, text width=30mm, anchor=north] at (-2,-9) {a sale queues at the provider's rate; failover only from \emph{intent}, never from \emph{requested}};
+\end{tikzpicture}
