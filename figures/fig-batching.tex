@@ -1,0 +1,22 @@
+% Throughput and latency against batch size on an accelerator: throughput
+% saturates, latency grows linearly, and the knee is where the design sits.
+\begin{tikzpicture}[x=1mm,y=1mm, font=\scriptsize]
+% axes
+\draw[ink, line width=0.5pt] (0,0) rectangle (70,44);
+\foreach \x/\l in {0/1, 17.5/8, 35/32, 52.5/128, 70/512} {\draw[ink] (\x,0) -- (\x,-1.2); \node[below, font=\tiny] at (\x,-1.2) {\l};}
+\node[font=\scriptsize, anchor=north west] at (0,-4) {batch size (log scale)};
+\node[rotate=90, font=\scriptsize, text=accent] at (-4.5,22) {throughput per accelerator};
+\node[rotate=90, font=\scriptsize, text=rule] at (75.5,22) {latency per request};
+% throughput: saturating curve
+\draw[accent, line width=0.9pt] plot[smooth] coordinates {(0,3) (8,10) (17.5,19) (26,27) (35,33) (44,37) (52.5,39.5) (61,40.5) (70,41)};
+% latency: roughly linear in batch on a log axis appears as exponential growth
+\draw[rule, line width=0.9pt, dash pattern=on 2.2pt off 1.2pt] plot[smooth] coordinates {(0,4) (17.5,5.5) (35,9) (44,13) (52.5,20) (61,30) (70,43)};
+% knee
+\draw[rule, line width=0.4pt, dotted] (40,0) -- (40,44);
+\node[font=\tiny, text=ink, align=center, fill=white, inner sep=1pt] at (40,47.5) {the knee: most of the throughput,\\little of the latency};
+% regions
+\node[font=\tiny, text=rule, align=center] at (14,38) {left of the knee:\\the accelerator idles,\\cost per request is high};
+\node[font=\tiny, text=rule, align=right, anchor=north east] at (70,-8.5) {right of the knee: throughput is flat,\\the tail grows, the queue waits};
+\node[text=accent, font=\tiny\bfseries, anchor=east] at (25,31) {throughput};
+\node[text=rule, font=\tiny\bfseries, anchor=west] at (46,26) {latency};
+\end{tikzpicture}

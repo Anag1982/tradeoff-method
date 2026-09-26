@@ -1,0 +1,36 @@
+% The short-video recommender at minute fifteen: candidate sources merged,
+% ranked, re-ranked; features from the online store and the session stream;
+% impressions logged back to training; the policy filter ahead of ranking.
+\begin{tikzpicture}[archstyles]
+% request path
+\node[actor] (app) at (0,22) {app\\request};
+\node[svc, minimum width=20mm] (gate) at (18,22) {policy filter;\\seen-dedupe};
+\draw[flow] (app) -- (gate);
+% candidate sources
+\node[svc, minimum width=22mm] (ann) at (48,36) {two-tower ANN\\600};
+\node[svc, minimum width=22mm] (i2i) at (48,26) {co-watch\\200};
+\node[svc, minimum width=22mm] (fol) at (48,16) {followed\\creators 100};
+\node[svc, minimum width=22mm] (fresh) at (48,6) {fresh and\\explore 100};
+\draw[flow] (gate.east) -- ++(4,0) |- (ann.west);
+\draw[flow] (gate.east) -- ++(4,0) |- (i2i.west);
+\draw[flow] (gate.east) -- ++(4,0) |- (fol.west);
+\draw[flow] (gate.east) -- ++(4,0) |- (fresh.west);
+% merge, rank, rerank
+\node[dec, minimum width=18mm] (rank) at (78,22) {rank 1,000\\multi-task};
+\foreach \n in {ann,i2i,fol,fresh}{\draw[flow] (\n.east) -- ++(3,0) |- (rank.west);}
+\node[svc, minimum width=18mm] (rerank) at (106,22) {re-rank 20:\\diversity, slots};
+\draw[flow] (rank) -- (rerank);
+% return path, routed above everything
+\draw[flow] (rerank.north) -- ++(0,32) -- (0,54) -- (app.north);
+\node[lbl] at (22,57.5) {20 videos to the app};
+% feature stores
+\node[store] (online) at (78,4) {online store:\\user, item};
+\node[queue, minimum width=20mm] (session) at (106,4) {session stream:\\last 10 watched};
+\draw[flow] (online) -- (rank);
+\draw[flow] (session.north) |- (rank.south east);
+% index freshness
+\node[note, text width=30mm] at (48,45) {index rebuilt hourly;\\live index for the last hour};
+% logging back
+\node[ext, minimum width=22mm] (log) at (80,45) {impression log\\to training};
+\draw[async] (rerank.north west) -- (log.south east);
+\end{tikzpicture}

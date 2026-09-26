@@ -1,0 +1,31 @@
+% Visual near-duplicate search, minute fifteen: an embedding on upload, a
+% small hot index and the main quantised index, candidates verified against
+% full vectors before any action, a whitelist for popular legitimate
+% images, and a nightly merge.
+\begin{tikzpicture}[archstyles]
+\node[actor] (up) at (0,20) {image\\upload};
+\node[svc, minimum width=18mm] (emb) at (18,20) {embedding\\model, batched\\128 dims};
+\draw[flow] (up) -- (emb);
+\node[dec, minimum width=22mm] (ann) at (48,20) {nearest-neighbour\\search: hot index\\+ main index};
+\draw[flow] (emb) -- (ann);
+\node[svc, minimum width=20mm] (ver) at (78,20) {verify top 20\\against full vectors;\\threshold};
+\draw[flow] (ann) -- (ver);
+\node[svc, minimum width=14mm] (act) at (104,20) {match /\\no match};
+\draw[flow] (ver) -- (act);
+% indexes
+\node[store] (hot) at (28,2) {hot index:\\last 24 hours,\\exact};
+\node[store] (main) at (54,2) {main index:\\2B vectors,\\quantised, 64 GB};
+\draw[flow] (hot) -- (ann);
+\draw[flow] (main) -- (ann);
+\draw[async] (hot.east) -- (main.west);
+\node[lbl] at (41,-5) {nightly merge};
+% reference set and whitelist
+\node[store] (ref) at (81,2) {full vectors and\\the known-bad set};
+\draw[flow] (ref) -- (ver);
+\node[ext, minimum width=18mm] (wl) at (107,2) {whitelist:\\images with many\\legitimate copies};
+\draw[flow] (wl) -- (act);
+% insert back
+\draw[async] (emb.south) -- (18,2) -- (hot.west);
+\node[lbl] at (9,9) {inserted\\in minutes};
+\node[note, text width=34mm] at (78,38) {embedding trained on transformation pairs;\\threshold set from the cost of a miss\\against a false match};
+\end{tikzpicture}

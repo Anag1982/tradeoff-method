@@ -1,0 +1,32 @@
+% Label delay: events on a timeline, the window whose labels have arrived,
+% the window whose labels are still in flight, and what a model trained today sees.
+\begin{tikzpicture}[x=1mm,y=1mm, font=\scriptsize,
+  ev/.style={circle, fill=ink, inner sep=1.1pt},
+  plab/.style={circle, draw=accent, line width=0.8pt, fill=white, inner sep=1.1pt},
+  lbl/.style={font=\tiny, text=rule, align=center, inner sep=1pt}]
+% windows
+\fill[black!8] (2,3) rectangle (52,11);
+\fill[accent!10] (52,3) rectangle (80,11);
+% axis
+\draw[-{Stealth[length=3pt]}, ink, line width=0.5pt] (0,0) -- (106,0);
+\node[right, font=\scriptsize] at (106,0) {time};
+\draw[ink, line width=0.7pt] (80,-1.5) -- (80,1.5); \node[below, font=\scriptsize\bfseries] at (80,-1.5) {today};
+\draw[rule, line width=0.5pt, dashed] (52,-1.5) -- (52,18);
+\node[lbl] at (52,20.5) {today minus the label delay};
+% window captions
+\node[lbl, text=ink] at (27,13.5) {labels have arrived:\\the training window};
+\node[lbl, text=accent] at (66,13.5) {labels in flight:\\unlabelled or provisional};
+% events
+\foreach \x in {6,11,17,22,29,34,39,45,50} {\node[ev] at (\x,7) {};}
+\node[plab] at (14,7) {}; \node[plab] at (42,7) {};
+\foreach \x in {55,59,64,68,72,76} {\node[ev] at (\x,7) {};}
+\node[plab, dashed] at (62,7) {}; \node[plab, dashed] at (74,7) {};
+% arrows from two positives in flight to their future label arrival
+\draw[-{Stealth[length=2.5pt]}, accent, line width=0.5pt, dashed] (62,7) to[bend left=22] (90,7);
+\draw[-{Stealth[length=2.5pt]}, accent, line width=0.5pt, dashed] (74,7) to[bend left=22] (101,7);
+\node[lbl, text=accent] at (94,13.5) {their labels arrive\\after today};
+% legend
+\node[ev] at (2,-9) {}; \node[lbl, anchor=west, text=ink] at (4,-9) {event, negative so far};
+\node[plab] at (38,-9) {}; \node[lbl, anchor=west, text=ink] at (40,-9) {positive, label arrived};
+\node[plab, dashed] at (72,-9) {}; \node[lbl, anchor=west, text=ink] at (74,-9) {positive, label not yet arrived};
+\end{tikzpicture}

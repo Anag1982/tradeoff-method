@@ -1,0 +1,27 @@
+% The feature pipeline's two halves and the two paths that keep them consistent:
+% one definition computed in both, and served features logged back for training.
+\begin{tikzpicture}[archstyles]
+% raw sources
+\node[store] (events) at (0,33) {event\\stream};
+\node[store] (tables) at (0,5) {batch\\tables};
+% definitions
+\node[dec, minimum width=24mm] (defs) at (27,19) {one feature\\definition};
+\draw[flow] (events.east) -- (defs.west);
+\draw[flow] (tables.east) -- (defs.west);
+% offline half
+\node[svc, minimum width=34mm] (offline) at (63,36) {offline store: history,\\point-in-time joins};
+\node[svc, minimum width=20mm] (train) at (106,36) {training\\rows};
+\draw[flow] (defs.east) |- (offline.west);
+\draw[flow] (offline) -- node[lbl, above=0.6mm] {as of each\\label's time} (train);
+% online half
+\node[svc, minimum width=34mm] (online) at (63,2) {online store: current\\values, ms lookup};
+\node[svc, minimum width=20mm] (serve) at (106,2) {serving\\request};
+\draw[flow] (defs.east) |- (online.west);
+\draw[flow] (online) -- node[lbl, above=0.6mm] {now} (serve);
+% logged features back to offline
+\draw[async] (serve.north) -- node[lbl, right=0.8mm, pos=0.5, align=left] {log what\\was served} (train.south);
+% skew monitor
+\node[ext, minimum width=24mm] (skew) at (78,19) {skew monitor:\\served vs trained\\distributions};
+\draw[async] (offline.south) -- (skew.north);
+\draw[async] (online.north) -- (skew.south);
+\end{tikzpicture}

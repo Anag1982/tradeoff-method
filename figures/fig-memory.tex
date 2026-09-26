@@ -1,0 +1,26 @@
+% Assistant with memory at minute fifteen: memories are read on every
+% request from a per-user store and written after the session by an
+% extractor; corrections and deletions act on the store directly.
+\begin{tikzpicture}[archstyles]
+\node[actor] (u) at (-5,20) {user\\message};
+\node[svc, minimum width=20mm] (read) at (19,20) {memory read:\\profile + top 5\\by similarity, 20 ms};
+\draw[flow] (u) -- (read);
+\node[dec, minimum width=22mm] (model) at (50,20) {assistant model;\\memories in context,\\capped at 500 tokens};
+\draw[flow] (read) -- (model);
+\node[svc, minimum width=14mm] (resp) at (84,20) {reply};
+\draw[flow] (model) -- (resp);
+% store
+\node[store] (store) at (19,2) {per-user memory\\store: a few hundred\\entries, versioned};
+\draw[flow] (store) -- (read);
+% extractor
+\node[dec, minimum width=22mm] (ext) at (57,2) {extractor, after\\the session: durable,\\permitted, new?};
+\draw[async] (resp.south) -- (84,2) -- (ext.east);
+\draw[async] (ext) -- (store);
+\node[lbl] at (37.5,-7) {write,\\seconds later};
+% deletion and corrections
+\node[ext, minimum width=20mm] (del) at (19,-17) {user views, edits,\\deletes; a delete\\is a wall};
+\draw[flow] (del) -- (store);
+\node[ext, minimum width=22mm] (pol) at (57,-17) {policy: categories\\never stored;\\nothing trained on};
+\draw[async] (pol) -- (ext);
+\node[note, text width=30mm] at (50,36) {corrections in the conversation\\(``no, I said\ldots'') are the\\online signal for wrong recall};
+\end{tikzpicture}

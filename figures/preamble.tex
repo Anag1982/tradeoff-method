@@ -1,4 +1,4 @@
-% Standalone preamble for the figures of The Tradeoff Method.
+% Standalone preamble for the figures of The Tradeoff Method for ML Systems.
 % Each fig-*.tex is a bare tikzpicture; wrap it as in build.sh or \input it
 % into any document that loads this file.
 \usepackage[T1]{fontenc}
@@ -16,7 +16,6 @@
 \definecolor{rule}{RGB}{120,120,120}
 
 % ---- architecture diagram styles (Part III) ------------------------------
-\usetikzlibrary{shapes.geometric,shapes.misc}
 \tikzset{archstyles/.style={
   x=1mm,y=1mm, font=\scriptsize,
   svc/.style={draw=ink, line width=0.5pt, rounded corners=1.5pt, align=center, inner sep=2.5pt, minimum height=8mm, fill=white},
@@ -27,5 +26,5 @@
   dec/.style={draw=accent, line width=0.9pt, rounded corners=1.5pt, align=center, inner sep=2.5pt, minimum height=8mm, fill=white, text=accent, font=\scriptsize\bfseries},
   flow/.style={-{Stealth[length=3pt]}, draw=ink, line width=0.5pt},
   async/.style={-{Stealth[length=3pt]}, draw=ink, line width=0.5pt, dashed},
-  lbl/.style={font=\tiny, text=ink, fill=white, inner sep=1pt, align=center},
+  lbl/.style={font=\tiny, text=ink, inner sep=1pt, align=center},
   note/.style={font=\tiny, text=rule, align=center, inner sep=1pt}}}
