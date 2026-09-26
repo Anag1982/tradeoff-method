@@ -1,0 +1,27 @@
+% Card fraud at authorisation, minute fifteen: hard rules in front, one
+% batched feature fetch from the online store and the stream counters, the
+% model, a three-way decision, the served-feature log, and chargebacks
+% joining sixty days later.
+\begin{tikzpicture}[archstyles]
+\node[actor] (auth) at (0,20) {authori-\\sation};
+\node[svc, minimum width=18mm] (rules) at (18,20) {hard rules:\\blocklist,\\velocity caps};
+\draw[flow] (auth) -- (rules);
+\node[dec, minimum width=20mm] (model) at (46,20) {fraud model\\200 features\\p(chargeback)};
+\draw[flow] (rules) -- (model);
+\node[svc, minimum width=22mm] (dec) at (76,20) {decision:\\approve / challenge\\/ decline};
+\draw[flow] (model) -- (dec);
+\node[svc, minimum width=14mm] (issuer) at (104,20) {issuer;\\response};
+\draw[flow] (dec) -- (issuer);
+% features
+\node[store] (store) at (34,2) {online store:\\190 entity features,\\nightly};
+\node[store] (stream) at (60,2) {stream counters:\\10 burst features,\\seconds};
+\draw[flow] (store) -- (model);
+\draw[flow] (stream) -- (model);
+% log and labels
+\node[queue, minimum width=24mm] (log) at (46,40) {served-feature log,\\180 days};
+\draw[async] (dec.north) -- ++(0,6) -- (58,32) -- (log.south east);
+\node[lbl] at (70,34.5) {score, decision, features};
+\node[ext, minimum width=20mm] (cb) at (90,40) {chargebacks and\\disputes, 14--90\\days late};
+\draw[async] (cb) -- (log);
+\node[note, text width=30mm] at (17,40) {rules change in hours;\\model retrained weekly\\on matured labels;\\1\% of soft declines\\approved for labels};
+\end{tikzpicture}

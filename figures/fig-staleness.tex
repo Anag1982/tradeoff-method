@@ -1,0 +1,22 @@
+% The staleness curve: quality of a model against its age, measured by training
+% at a date and scoring on later dates. The retrain cadence is read off it.
+\begin{tikzpicture}[x=1mm,y=1mm, font=\scriptsize]
+% shaded loss between retrains, drawn first
+\fill[accent!12] (0,36) -- plot[smooth] coordinates {(0,36) (10,34.5) (20,32.5) (30,30)} -- (30,36) -- cycle;
+% frame and ticks
+\draw[ink, line width=0.5pt] (0,0) rectangle (80,40);
+\foreach \x/\l in {0/0, 20/7, 40/14, 60/21, 80/28} {\draw[ink] (\x,0) -- (\x,-1.2); \node[below, font=\tiny] at (\x,-1.2) {\l};}
+\node[font=\scriptsize, anchor=north west] at (0,-4) {model age, days};
+\node[rotate=90, font=\scriptsize] at (-4.5,20) {quality of the proxy};
+% the curve
+\draw[accent, line width=0.9pt] plot[smooth] coordinates {(0,36) (10,34.5) (20,32.5) (30,30) (40,27) (50,24) (60,21.5) (70,19.5) (80,18)};
+% floor
+\draw[rule, line width=0.5pt, dashed] (0,30) -- (80,30);
+\node[font=\tiny, text=rule, anchor=south east] at (79,30.5) {the quality the business will accept};
+% cadence
+\draw[rule, line width=0.5pt, dotted] (30,0) -- (30,40);
+\node[font=\tiny, text=ink, align=center, fill=white, inner sep=1pt] at (30,43.5) {retrain here: the age at which\\the curve crosses the floor};
+% labels clear of the fill
+\node[font=\tiny, text=accent, align=left, anchor=west] at (33,35.5) {shaded: quality given up\\between retrains};
+\node[font=\tiny, text=rule, align=right, anchor=south east] at (79,2) {measured by training at a date\\and scoring on later dates};
+\end{tikzpicture}

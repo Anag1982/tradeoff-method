@@ -1,0 +1,26 @@
+% The forty-five-minute plan for a learned system, as a timeline, with the
+% artefact each block leaves on the board.
+\begin{tikzpicture}[x=2.3mm,y=1mm, font=\scriptsize]
+  \foreach \s/\e/\c in {0/2/black!10, 2/7/black!22, 7/13/black!10, 13/15/black!22,
+            15/21/black!10, 21/35/black!22, 35/43/black!10, 43/45/black!22} {
+    \fill[\c] (\s,0) rectangle (\e,8);
+    \draw[rule, line width=0.3pt] (\s,0) rectangle (\e,8);
+  }
+  \foreach \s/\e/\l in {2/7/Name, 7/13/Bound, 15/21/Choose, 21/35/Deepen, 35/43/Loop} {
+    \node[text=ink, font=\scriptsize\bfseries] at ({(\s+\e)/2},4) {\l};
+  }
+  \node[text=ink, font=\tiny, rotate=90] at (1,4) {Listen};
+  \node[text=ink, font=\tiny, rotate=90] at (14,4) {Binds};
+  \node[text=ink, font=\tiny, rotate=90] at (44,4) {Close};
+  \foreach \m in {0,2,7,13,15,21,35,43,45} {
+    \draw[rule] (\m,0) -- (\m,-1.5);
+    \node[text=rule, font=\tiny, below] at (\m,-1.5) {\m};
+  }
+  \node[text=rule, font=\tiny, below] at (22.5,-5) {minutes};
+  \foreach \x/\lvl/\t in {4.5/11/objective sheet, 10/18/envelope, 14/11/one sentence,
+                          18/25/table{,} triangle{,} decision line{,} then the diagram,
+                          28/11/one mechanism{,} worked, 39/18/loop sheet, 44/11/close} {
+    \draw[rule, line width=0.3pt] (\x,8) -- (\x,\lvl);
+    \node[text=ink, anchor=south, fill=white, inner sep=1pt] at (\x,\lvl) {\t};
+  }
+\end{tikzpicture}

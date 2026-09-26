@@ -1,0 +1,22 @@
+% Platform consolidation in five stages, placed by reversibility: the
+% registry and the shared serving pool first, the feature store with a
+% quarter of dual computation and a skew comparison, the pipelines behind
+% the registry, and the switch-off last.
+\begin{tikzpicture}[archstyles,
+  stage/.style={draw=ink, line width=0.5pt, rounded corners=1.5pt, align=center, inner sep=2.5pt, minimum height=14mm, text width=18mm, fill=white}]
+\node[stage] (s1) at (0,0) {\textbf{1 Register}\\every feature and model, with its owner and definition};
+\node[stage] (s2) at (22,0) {\textbf{2 Serve}\\one accelerator pool; teams move as tenants};
+\node[stage] (s3) at (44,0) {\textbf{3 Compute}\\one feature store; old and new computed side by side};
+\node[stage] (s4) at (66,0) {\textbf{4 Compare}\\served values against the old, per feature, for a quarter};
+\node[stage, dec, text width=17mm, minimum height=14mm, rounded corners=1.5pt] (s5) at (88,0) {5 Switch off\\the team's own pipeline};
+\foreach \a/\b in {s1/s2,s2/s3,s3/s4,s4/s5}{\draw[flow] (\a) -- (\b);}
+\draw[rule, line width=0.5pt] (-9,11) -- (-9,12.5) -- (75,12.5) -- (75,11);
+\node[note, anchor=south] at (33,13) {reversible: a tenant moves back, a feature reads from its old source};
+\draw[accent, line width=0.7pt] (79,11) -- (79,12.5) -- (97,12.5) -- (97,11);
+\node[note, text=accent, anchor=south] at (88,13) {irreversible, so last};
+\node[store] (old) at (4,-24) {four stores,\\four fleets};
+\node[store] (new) at (86,-24) {one store,\\one pool};
+\draw[async] (old.east) -- ++(0,2) -- node[lbl,above]{old and new definitions served side by side} ($(new.west)+(0,2)$);
+\draw[async] ($(new.west)+(0,-2)$) -- node[lbl,below]{a retrain ships only past its judged set} ($(old.east)+(0,-2)$);
+\node[note, text width=44mm, anchor=north] at (45,-32) {never a big-bang cutover: a feature that differs at the fourth decimal is a silent regression in every model that reads it};
+\end{tikzpicture}

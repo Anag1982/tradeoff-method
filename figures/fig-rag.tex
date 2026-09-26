@@ -1,0 +1,28 @@
+% Enterprise assistant at minute fifteen: ingestion with ACL sync; at query
+% time, hybrid retrieval over-fetches, the permission check goes to the
+% source of truth, a re-ranker picks the passages, and the platform's model
+% answers with citations or abstains.
+\begin{tikzpicture}[archstyles]
+\node[actor] (emp) at (0,20) {employee\\question};
+\node[svc, minimum width=18mm] (qu) at (18,20) {query\\understanding;\\user's groups};
+\draw[flow] (emp) -- (qu);
+\node[dec, minimum width=22mm] (ret) at (48,20) {hybrid retrieval:\\keyword + vector,\\over-fetch 500};
+\draw[flow] (qu) -- (ret);
+\node[svc, minimum width=20mm] (acl) at (78,20) {permission check\\against the source\\of truth; re-rank};
+\draw[flow] (ret) -- (acl);
+\node[dec, minimum width=18mm] (ans) at (106,20) {grounded answer\\with citations,\\or abstain};
+\draw[flow] (acl) -- (ans);
+% indexes
+\node[store] (idx) at (48,2) {chunk indexes,\\per source;\\60M chunks};
+\draw[flow] (idx) -- (ret);
+\node[store] (aclc) at (78,2) {ACL cache,\\minutes; source\\on a miss};
+\draw[flow] (aclc) -- (acl);
+\node[ext, minimum width=18mm] (plat) at (106,2) {serving\\platform\\(the serving platform)};
+\draw[flow] (plat) -- (ans);
+% ingestion
+\node[ext, minimum width=22mm] (src) at (18,-16) {sources: wiki,\\tickets, drive, chat;\\20M documents};
+\node[svc, minimum width=20mm] (ing) at (48,-16) {ingest: chunk,\\embed, ACL\\snapshot; minutes};
+\draw[async] (src) -- (ing);
+\draw[async] (ing) -- (idx);
+\node[note, text width=30mm] at (78,36) {no label: a judged set of\\questions with passages;\\citation clicks as the\\weak online signal};
+\end{tikzpicture}

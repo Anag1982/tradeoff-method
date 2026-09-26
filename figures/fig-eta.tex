@@ -1,0 +1,22 @@
+% Delivery-time estimation at minute fifteen: a routing service for travel time,
+% streaming load features, a decomposed quantile model, two surfaces (pre-order
+% and live), and actuals joining back within the hour.
+\begin{tikzpicture}[archstyles]
+\node[actor] (page) at (0,30) {restaurant\\page};
+\node[actor] (track) at (0,10) {live\\tracking};
+\node[dec, minimum width=24mm] (model) at (40,20) {quantile model:\\prep + pickup wait\\+ travel, per stage};
+\draw[flow] (page.east) -- ++(3,0) |- (model.west);
+\draw[flow] (track.east) -- ++(3,0) |- (model.west);
+\node[ext, minimum width=20mm] (route) at (40,46) {routing service:\\travel time,\\not learned};
+\draw[flow] (route) -- (model);
+\node[queue, minimum width=22mm] (stream) at (76,36) {streaming: orders in\\progress per kitchen;\\couriers nearby};
+\draw[flow] (stream.south west) -- (model.north east);
+\node[store] (ent) at (76,4) {restaurant and\\courier entity\\features, nightly};
+\draw[flow] (ent.north west) -- (model.south east);
+\node[svc, minimum width=20mm] (show) at (76,20) {pre-order: 80th\\percentile shown;\\live: median,\\updated per minute};
+\draw[flow] (model) -- (show);
+\node[ext, minimum width=20mm] (act) at (108,20) {actuals within\\the hour; late\\rate by stage};
+\draw[async] (show) -- (act);
+\draw[async] (act.south) -- ++(0,-24) -- (40,-6) -- (model.south);
+\node[lbl] at (74,-9.5) {actuals become the label, per stage};
+\end{tikzpicture}

@@ -1,0 +1,25 @@
+% The cascade: each stage sees fewer items with a costlier model, spends about
+% the same milliseconds, and the end-to-end recall is the product of the stages'.
+\begin{tikzpicture}[x=1mm,y=1mm, font=\scriptsize,
+  num/.style={font=\footnotesize\bfseries, text=accent},
+  rt/.style={font=\scriptsize, text=ink, align=left, anchor=west, inner sep=1pt},
+  lt/.style={font=\scriptsize, text=rule, align=right, anchor=east, inner sep=1pt}]
+% funnel outline and bands (height 48)
+\draw[accent, line width=0.7pt] (-26,48) -- (26,48) -- (9,0) -- (-9,0) -- cycle;
+\draw[rule, line width=0.4pt, dashed] (-20.3,32) -- (20.3,32);
+\draw[rule, line width=0.4pt, dashed] (-14.7,16) -- (14.7,16);
+% numbers inside
+\node[num] at (0,40) {100,000,000 items};
+\node[num] at (0,24) {1,000 candidates};
+\node[num] at (0,8) {20 shown};
+% right: what each stage is and costs
+\node[rt] at (30,40) {\textbf{retrieval:} precomputed vectors,\\nearest-neighbour index\\$\sim$0.1 $\mu$s per item; $\approx$ 5 ms per request};
+\node[rt] at (30,24) {\textbf{ranking:} cross-feature model,\\user and item together\\$\sim$10 $\mu$s per item; $\approx$ 10 ms per request};
+\node[rt] at (30,8) {\textbf{re-ranking:} pairwise model,\\rules, diversity\\$\sim$0.5 ms per item; $\approx$ 10 ms per request};
+% left: recall per stage
+\node[lt] at (-30,40) {recall at 1,000:\\0.90};
+\node[lt] at (-30,24) {recall at 20:\\0.95};
+\node[lt] at (-30,8) {ordering:\\the metric};
+% bottom: product
+\node[font=\scriptsize, text=ink, align=center] at (4,-6) {end-to-end recall $\approx 0.90 \times 0.95 = 0.86$; \quad time $\approx 25$ ms of a 50-ms budget};
+\end{tikzpicture}

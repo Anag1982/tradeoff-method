@@ -1,0 +1,22 @@
+% Two ROC curves on a zoomed axis (false-positive rate 0 to 10 per cent).
+% A has the larger area under the full curve; B is better below about 1.5 per
+% cent, where the business operates. Values match Exercise 2.2.
+\begin{tikzpicture}[x=1mm,y=1mm, font=\scriptsize]
+\fill[black!8] (0,0) rectangle (3,60);
+\draw[ink, line width=0.5pt] (0,0) rectangle (60,60);
+% ticks
+\foreach \x/\l in {3/0.5\%, 30/5\%, 60/10\%} {\draw[ink] (\x,0) -- (\x,-1.2); \node[below, font=\tiny] at (\x,-1.2) {\l};}
+\foreach \y/\l in {0/0, 30/50\%, 60/100\%} {\draw[ink] (0,\y) -- (-1.2,\y); \node[left, font=\tiny] at (-1.2,\y) {\l};}
+\node[font=\scriptsize] at (30,-6.5) {false-positive rate};
+\node[rotate=90, font=\scriptsize] at (-8.5,30) {recall (fraud caught)};
+% model A: larger area, weak at low FPR
+\draw[accent, line width=0.9pt] plot[smooth] coordinates {(0,0) (0.6,18) (3,25.8) (12,42) (30,49) (60,54)};
+% model B: smaller area, strong at low FPR
+\draw[ink, line width=0.9pt, dash pattern=on 2.2pt off 1.2pt] plot[smooth] coordinates {(0,0) (0.6,28.8) (3,37.8) (12,39.6) (30,44) (60,48)};
+\node[text=accent, font=\scriptsize\bfseries, anchor=east] at (58,57) {A: larger AUC};
+\node[text=ink, font=\scriptsize\bfseries, anchor=east] at (58,41) {B: smaller AUC};
+% operating point annotations
+\draw[rule, line width=0.3pt] (3,37.8) -- (8,37.8); \node[text=rule, font=\tiny, anchor=west] at (8,37.8) {B catches 63\% at 0.5\%};
+\draw[rule, line width=0.3pt] (3,25.8) -- (8,25.8); \node[text=rule, font=\tiny, anchor=west] at (8,25.8) {A catches 43\% at 0.5\%};
+\node[text=rule, font=\tiny, align=left, anchor=west] at (5,9) {shaded: the false-positive rate\\the business will tolerate};
+\end{tikzpicture}

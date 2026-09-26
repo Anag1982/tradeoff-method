@@ -1,0 +1,26 @@
+% Ad selection at minute fifteen: targeting narrows to eligible ads, the
+% calibrated pCTR/pCVR model scores them, the auction is a rule, pacing is a
+% control loop, and clicks and delayed conversions are logged back.
+\begin{tikzpicture}[archstyles]
+\node[actor] (req) at (0,20) {ad\\request};
+\node[svc, minimum width=20mm] (targ) at (20,20) {targeting and\\pacing filter:\\200 eligible};
+\draw[flow] (req) -- (targ);
+\node[dec, minimum width=20mm] (model) at (50,20) {pCTR, pCVR\\+ calibration\\by segment};
+\draw[flow] (targ) -- (model);
+\node[svc, minimum width=20mm] (auction) at (80,20) {auction: rank by\\bid $\times$ pCTR;\\second price};
+\draw[flow] (model) -- (auction);
+\node[svc, minimum width=16mm] (serve) at (106,20) {ad shown;\\price logged};
+\draw[flow] (auction) -- (serve);
+% features
+\node[store] (feat) at (50,2) {user, ad, context\\features; ad counters\\(streaming)};
+\draw[flow] (feat) -- (model);
+% pacing loop
+\node[ext, minimum width=20mm] (pace) at (20,38) {budget pacing:\\control loop,\\not learned};
+\draw[async] (pace.south) -- (targ.north);
+\draw[async] (serve.north) -- ++(0,30) -- (20,54) -- (pace.north);
+\node[lbl] at (64,57.5) {what was served, back to pacing};
+% labels back
+\node[queue, minimum width=22mm] (log) at (80,40) {clicks in seconds;\\conversions days late,\\delay-corrected};
+\draw[async] (serve.north west) -- (log.south east);
+\node[note, text width=26mm] at (50,40) {retrained hourly;\\new ads explored with a\\bounded boost};
+\end{tikzpicture}
