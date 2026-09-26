@@ -1,0 +1,31 @@
+% Content moderation, minute fifteen: known-content hash match and a small
+% pre-publication model on the write path for the highest-harm categories,
+% the batched classifier after publication, a queue prioritised by reach,
+% reviewers whose decisions are the labels, and the random audit sample
+% that measures prevalence.
+\begin{tikzpicture}[archstyles]
+\node[actor] (post) at (0,22) {new post};
+\node[svc, minimum width=18mm] (hash) at (18,22) {hash match:\\known content};
+\draw[flow] (post) -- (hash);
+\node[dec, minimum width=18mm] (pre) at (44,22) {pre-publication\\model, 2 categories,\\300 ms};
+\draw[flow] (hash) -- (pre);
+\node[svc, minimum width=14mm] (pub) at (68,22) {published};
+\draw[flow] (pre) -- (pub);
+\node[dec, minimum width=20mm] (postm) at (96,22) {post-publication\\classifier, batched,\\all categories};
+\draw[flow] (pub) -- (postm);
+% queue and reviewers
+\node[queue, minimum width=22mm] (q) at (96,2) {review queue,\\ordered by\\reach $\times$ p(violates)};
+\draw[flow] (postm) -- (q);
+\node[svc, minimum width=18mm] (rev) at (66,2) {reviewers:\\decisions,\\appeals};
+\draw[flow] (q) -- (rev);
+\node[store] (labels) at (36,2) {labels: reviewer\\decisions + audit\\sample};
+\draw[flow] (rev) -- (labels);
+\draw[async] (labels.north) -- (44,14) -- (pre.south);
+\draw[async] (labels.north east) -- (60,12) -- (88,12) -- (postm.south west);
+\node[lbl] at (74,14.8) {monthly retrain};
+% audit sample
+\node[ext, minimum width=20mm] (audit) at (68,42) {random sample of\\views, reviewed:\\prevalence};
+\draw[async] (pub.north) -- (audit.south);
+\node[note, text width=26mm] at (24,42) {new policy category:\\rule and hash list first,\\model when labelled};
+\node[note, text width=24mm] at (104,42) {high-confidence band\\auto-actioned,\\with appeal};
+\end{tikzpicture}

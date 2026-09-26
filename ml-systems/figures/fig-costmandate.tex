@@ -1,0 +1,19 @@
+% The inference bill by product, before and after the levers, with the
+% quality price named on each bar. Bar length is the share of the bill.
+\begin{tikzpicture}[archstyles]
+\def\bar#1#2#3#4#5#6{%
+  \node[anchor=east, font=\scriptsize, align=right] at (-2,#1) {#2};
+  \fill[black!12] (0,#1-2.6) rectangle (#3*0.7,#1+2.6);
+  \fill[accent!70] (0,#1-2.6) rectangle (#4*0.7,#1+2.6);
+  \node[anchor=west, font=\scriptsize, text=ink, text width=62mm, align=left] at (33,#1+1.8) {#5};
+  \node[anchor=west, font=\tiny, text=rule, text width=62mm, align=left] at (33,#1-2.0) {#6};}
+\bar{52}{consumer\\assistant, 45\%}{45}{22}{8-bit, router, longer cache: $-$50\%}{price: hard questions by slice; answers an hour stale}
+\bar{39}{ranker\\fleets, 25\%}{25}{17}{batching, 8-bit, retire idle models: $-$30\%}{price: p99 nearer the budget; a judged check per model}
+\bar{26}{rented\\tenants, 15\%}{15}{9}{onto the owned platform: $-$40\%}{price: the platform's queue at peak}
+\bar{13}{batch\\scoring, 10\%}{10}{4}{trough lane, cadence from the curve: $-$60\%}{price: features a day older where the curve allows}
+\bar{0}{fraud, moderation,\\rest, 5\%}{5}{5}{no cut}{latency-bound and roster-bound: cannot pay}
+\draw[ink, line width=0.5pt] (0,-4) -- (0,56);
+\node[lbl, anchor=north] at (0,-5) {0};
+\node[lbl, anchor=north] at (31.5,-5) {45\% of the bill};
+\node[note, anchor=north west, text width=52mm] at (33,-8) {grey: this year's share; blue: after the levers};
+\end{tikzpicture}

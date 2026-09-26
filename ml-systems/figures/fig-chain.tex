@@ -1,0 +1,39 @@
+% The chain a learned system is designed along, with the question the room
+% asks at each link. Coloured outlines mark the three links a catalogue teaches.
+\begin{tikzpicture}[x=1mm,y=1mm,
+  link/.style={draw=ink, line width=0.5pt, rounded corners=1.5pt, align=center,
+               inner sep=2.5pt, font=\footnotesize\bfseries, text=ink,
+               minimum width=25mm, minimum height=9mm, fill=white},
+  taught/.style={link, draw=accent, line width=0.9pt, text=accent},
+  q/.style={font=\scriptsize, text=rule, align=center, text width=27mm, inner sep=0pt},
+  arr/.style={-{Stealth[length=3.5pt]}, draw=ink, line width=0.5pt},
+  ret/.style={-{Stealth[length=3.5pt]}, draw=rule, line width=0.6pt, dashed}]
+% row 1
+\node[link]   (b) at (0,0)   {Business\\objective};
+\node[link]   (m) at (30,0)  {ML\\objective};
+\node[link]   (p) at (60,0)  {Proxy and\\guardrail};
+\node[taught] (d) at (90,0)  {Data and\\labels};
+\node[q] at (0,-10.5)  {what are we making better,\\and for whom?};
+\node[q] at (30,-10.5) {what is predicted, and what\\may it get wrong?};
+\node[q] at (60,-10.5) {offline, online, and the\\gap between them};
+\node[q] at (90,-10.5) {where labels come from,\\how late, how leaky};
+% row 2
+\node[taught] (s) at (90,-26) {Model and\\stages};
+\node[taught] (v) at (60,-26) {Serving\\budget};
+\node[link]   (c) at (30,-26) {Unit\\cost};
+\node[link]   (f) at (0,-26)  {Feedback\\loop};
+\node[q] at (90,-36.5) {why this many stages,\\and why these};
+\node[q] at (60,-36.5) {percentile, batch, hardware,\\and the arithmetic};
+\node[q] at (30,-36.5) {per thousand requests, per\\trained model, per token};
+\node[q] at (0,-36.5)  {drift, feedback effects,\\harm, rollback};
+% forward edges
+\draw[arr] (b) -- (m);
+\draw[arr] (m) -- (p);
+\draw[arr] (p) -- (d);
+\draw[arr] (d.east) -- ++(6,0) |- (s.east);
+\draw[arr] (s) -- (v);
+\draw[arr] (v) -- (c);
+\draw[arr] (c) -- (f);
+% return edge
+\draw[ret] (f.west) -- ++(-7,0) -- node[midway, rotate=90, above, font=\scriptsize, text=rule] {the feedback loop} ++(0,26) -- (b.west);
+\end{tikzpicture}

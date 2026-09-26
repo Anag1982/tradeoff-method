@@ -1,0 +1,28 @@
+% Agentic workflow at minute fifteen: a planner in a loop with read tools,
+% write tools behind a deterministic policy gate, a human approval queue,
+% and a trace log that is the evaluation set.
+\begin{tikzpicture}[archstyles]
+\node[actor] (tk) at (0,20) {ticket};
+\node[svc, minimum width=16mm] (route) at (16,20) {router:\\easy / hard};
+\draw[flow] (tk) -- (route);
+\node[dec, minimum width=22mm] (plan) at (44,20) {planner: next\\action, arguments;\\budget 8 steps};
+\draw[flow] (route) -- (plan);
+\node[svc, minimum width=20mm] (gate) at (74,20) {policy gate:\\rules, caps,\\idempotency key};
+\draw[flow] (plan) -- (gate);
+\node[svc, minimum width=16mm] (reply) at (106,20) {reply to\\customer};
+\draw[flow] (gate) -- (reply);
+% tools
+\node[ext, minimum width=20mm] (read) at (44,2) {read tools: order\\lookup, policy\\retrieval, history};
+\draw[flow] (read) -- (plan);
+\node[ext, minimum width=20mm] (write) at (74,2) {write tools: refund,\\replace, close;\\compensating actions};
+\draw[flow] (gate) -- (write);
+\node[queue, minimum width=18mm] (human) at (108,2) {human approval\\above the cap;\\escalations};
+\draw[flow] (gate.south east) -- (human.north west);
+\draw[async] (human.north) -- (reply.south);
+% trace
+\node[store] (trace) at (44,40) {trace log: every\\step, tool result,\\outcome};
+\draw[async] (plan.north) -- (trace.south);
+\node[ext, minimum width=22mm] (replay) at (78,40) {replay evaluation:\\sandboxed tools,\\judged outcomes};
+\draw[async] (trace) -- (replay);
+\node[note, text width=26mm] at (14,40) {small model for the\\router and extraction;\\large for planning};
+\end{tikzpicture}

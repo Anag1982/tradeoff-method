@@ -1,0 +1,28 @@
+% Marketplace search at minute fifteen: query understanding, merged lexical and
+% vector retrieval, feature ranker, cross-encoder re-ranker with the seller
+% guardrail; result cache in front; purchases logged back with position.
+\begin{tikzpicture}[archstyles]
+\node[actor] (q) at (0,20) {query};
+\node[svc, minimum width=18mm] (cache) at (18,20) {result cache\\10-min TTL};
+\draw[flow] (q) -- (cache);
+\node[svc, minimum width=24mm] (qu) at (48,20) {query understanding:\\spelling, category,\\embedding};
+\draw[flow] (cache) -- node[lbl, above=0.6mm] {miss} (qu);
+\node[svc, minimum width=22mm] (lex) at (78,36) {keyword index\\500};
+\node[svc, minimum width=22mm] (vec) at (78,4) {vector index\\+ live index 500};
+\draw[flow] (qu.east) -- ++(3,0) |- (lex.west);
+\draw[flow] (qu.east) -- ++(3,0) |- (vec.west);
+\node[dec, minimum width=16mm] (rank) at (104,20) {rank 1,000\\to 40};
+\draw[flow] (lex.east) -- ++(3,0) |- (rank.west);
+\draw[flow] (vec.east) -- ++(3,0) |- (rank.west);
+\node[svc, minimum width=18mm] (rr) at (130,20) {cross-encoder\\re-rank 40;\\seller slot};
+\draw[flow] (rank) -- (rr);
+% page back to the cache, routed below everything
+\draw[flow] (rr.south) -- ++(0,-22) -- (18,-2) -- (cache.south);
+\node[lbl] at (74,-5.5) {page, returned and cached};
+% features from above
+\node[store] (feat) at (104,42) {listing and\\seller features};
+\draw[flow] (feat) -- (rank);
+% impression log
+\node[ext, minimum width=22mm] (log) at (130,42) {impression log with\\position; purchases\\join within hours};
+\draw[async] (rr.north) -- (log.south);
+\end{tikzpicture}

@@ -1,0 +1,30 @@
+% The five moves for learned systems, the artefact each leaves, and the two
+% return edges: a constraint that does not hold, and what the system taught itself.
+\begin{tikzpicture}[
+  x=1mm,y=1mm,
+  move/.style={draw=accent, line width=0.6pt, rounded corners=1.5pt, align=center,
+               inner sep=1pt, minimum height=10mm, minimum width=20mm,
+               font=\footnotesize\bfseries, text=accent},
+  art/.style={align=center, font=\scriptsize, text=ink, text width=21mm, inner sep=0pt},
+  mins/.style={font=\tiny, text=rule, inner sep=0pt},
+  arr/.style={-{Stealth[length=3.5pt]}, draw=rule, line width=0.6pt},
+  ret/.style={-{Stealth[length=3.5pt]}, draw=rule, line width=0.6pt, dashed}]
+\foreach \i/\name/\artefact/\t in {0/Name the\\objective/objective sheet/5 min,
+    1/Bound the\\problem/envelope/6 min,
+    2/Find what\\binds/one sentence/2 min,
+    3/Choose\\under it/decision line/20 min,
+    4/Close the\\loop/loop sheet/8 min}{
+  \node[move] (m\i) at (\i*23.5,0) {\name};
+  \node[art, below=2.2mm of m\i] (a\i) {\artefact};
+  \node[mins, above=1.2mm of m\i] {\t};
+}
+\foreach \i/\j in {0/1,1/2,2/3,3/4}{\draw[arr] (m\i) -- (m\j);}
+% return edge 1: choose -> bound (a constraint does not hold)
+\draw[ret] (a3.south) -- ++(0,-4) coordinate (e1r) -| ($(a1.south)+(0,-4)$) coordinate (e1l) -- (a1.south);
+\node[font=\tiny, text=rule, fill=white, inner sep=1.5pt] at ($(e1l)!0.5!(e1r)$)
+  {a number the choice rested on does not hold: re-bound};
+% return edge 2: loop -> objective (what the system taught itself)
+\draw[ret] (a4.south) -- ++(0,-10) coordinate (e2r) -| ($(a0.south)+(0,-10)$) coordinate (e2l) -- (a0.south);
+\node[font=\tiny, text=rule, fill=white, inner sep=1.5pt] at ($(e2l)!0.5!(e2r)$)
+  {the proxy rose and a guardrail fell: back to the objective sheet};
+\end{tikzpicture}

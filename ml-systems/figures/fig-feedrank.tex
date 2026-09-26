@@ -1,0 +1,29 @@
+% The personalised feed at minute fifteen: connected candidates from the
+% pre-assembled feed store, unconnected candidates from retrieval, integrity
+% scores attached at post time, a value model over a few hundred candidates.
+\begin{tikzpicture}[archstyles]
+\node[actor] (app) at (0,20) {feed\\load};
+\node[svc, minimum width=22mm] (conn) at (26,30) {connected: feed\\store, last 2 days};
+\node[svc, minimum width=22mm] (unconn) at (26,10) {unconnected:\\retrieval 300};
+\draw[flow] (app.east) -- ++(3,0) |- (conn.west);
+\draw[flow] (app.east) -- ++(3,0) |- (unconn.west);
+\node[svc, minimum width=18mm] (filt) at (54,20) {integrity filter;\\seen-dedupe};
+\draw[flow] (conn.east) -- ++(3,0) |- (filt.west);
+\draw[flow] (unconn.east) -- ++(3,0) |- (filt.west);
+\node[dec, minimum width=20mm] (value) at (80,20) {value model:\\P(comment), P(share),\\P(long view), P(hide)};
+\draw[flow] (filt) -- (value);
+\node[svc, minimum width=18mm] (rerank) at (106,20) {re-rank: source\\mix, slots, rules};
+\draw[flow] (value) -- (rerank);
+\draw[flow] (rerank.north) -- ++(0,18) -- (0,38) -- (app.north);
+\node[lbl] at (16,41.5) {ranked page};
+% post-time pipeline
+\node[actor] (post) at (54,48) {new\\post};
+\node[svc, minimum width=22mm] (postcls) at (80,48) {post-time classifiers:\\integrity, topic,\\quality};
+\draw[flow] (post) -- (postcls);
+\node[store] (poststore) at (106,48) {post features;\\early counters};
+\draw[flow] (postcls) -- (poststore);
+\draw[flow] (poststore.south) -- (value.north east);
+% user features
+\node[store] (user) at (80,2) {user store;\\session stream};
+\draw[flow] (user) -- (value);
+\end{tikzpicture}

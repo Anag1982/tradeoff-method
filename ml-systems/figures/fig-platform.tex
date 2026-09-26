@@ -1,0 +1,27 @@
+% Serving platform at minute fifteen: a gateway with tenant budgets and
+% admission, prefix-aware scheduling, a prefill pool feeding a decode pool
+% with continuous batching, streamed output, and a result cache in front.
+\begin{tikzpicture}[archstyles]
+\node[actor] (tn) at (-5,20) {40 tenants;\\2,000 req/s};
+\node[svc, minimum width=20mm] (gw) at (20,20) {gateway: auth,\\tenant token\\budgets, admission};
+\draw[flow] (tn) -- (gw);
+\node[dec, minimum width=20mm] (sched) at (48,20) {scheduler:\\priority by class,\\prefix affinity};
+\draw[flow] (gw) -- (sched);
+\node[svc, minimum width=18mm] (pre) at (74,20) {prefill pool:\\compute-bound,\\prefix cache};
+\draw[flow] (sched) -- (pre);
+\node[dec, minimum width=20mm] (dec) at (102,20) {decode pool:\\continuous batching,\\memory-bound};
+\draw[flow] (pre) -- (dec);
+\node[lbl] at (88,28) {state\\handed over};
+% cache and stream
+\node[store] (rc) at (20,2) {result cache;\\hit for the\\commonest fifth};
+\draw[flow] (rc) -- (gw);
+\node[store] (kv) at (74,2) {prefix cache:\\shared system\\prompts, in memory};
+\draw[flow] (kv) -- (pre);
+\node[svc, minimum width=16mm] (stream) at (102,2) {stream tokens\\to the tenant};
+\draw[flow] (dec) -- (stream);
+% batch lane and metrics
+\node[queue, minimum width=22mm] (batch) at (48,40) {batch lane: offline\\jobs fill the\\night-time trough};
+\draw[async] (batch.south) -- (sched.north);
+\node[note, text width=30mm] at (84,40) {SLOs per class: first token\\and tokens per second at p99;\\starvation and utilisation\\on one dashboard};
+\node[note, text width=24mm] at (14,40) {one model, 8-bit;\\a smaller model behind\\a router for easy calls};
+\end{tikzpicture}

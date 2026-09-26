@@ -1,0 +1,28 @@
+% The budget triangle: the three quantities every learned system trades, the
+% mechanism on each edge, and freshness as the axis that turns into cost or quality.
+\begin{tikzpicture}[x=1mm,y=1mm, font=\scriptsize,
+  vname/.style={font=\footnotesize\bfseries, text=accent, inner sep=1pt},
+  vdesc/.style={font=\scriptsize, text=ink, align=center, inner sep=1pt},
+  edge/.style={font=\scriptsize, text=ink, align=center, inner sep=1.5pt},
+  dot/.style={circle, fill=accent, inner sep=1.8pt},
+  arr/.style={-{Stealth[length=3pt]}, draw=rule, line width=0.6pt, dashed}]
+\coordinate (Q) at (0,36); \coordinate (L) at (-34,0); \coordinate (C) at (34,0);
+\draw[ink, line width=0.6pt] (Q) -- (L) -- (C) -- cycle;
+\node[dot] at (Q) {}; \node[dot] at (L) {}; \node[dot] at (C) {};
+% vertex names and descriptors
+\node[vname, above=1mm of Q] (qn) {Quality};
+\node[vdesc, above=0.3mm of qn, text width=34mm] {the offline proxy at\\the operating point};
+\node[vname, below=1mm of L] (ln) {Latency};
+\node[vdesc, below=0.3mm of ln, text width=30mm] {at the percentile\\the brief names};
+\node[vname, below=1mm of C] (cn) {Cost};
+\node[vdesc, below=0.3mm of cn, text width=30mm] {per thousand requests,\\or per day};
+% edge mechanisms, outside the edges
+\node[edge, anchor=east, text width=34mm] at (-20,22) {\textbf{capacity}\\bigger model, more candidates, more context: buys quality, spends milliseconds};
+\node[edge, anchor=west, text width=34mm] at (20,22) {\textbf{capacity, again}\\the same milliseconds are core- or accelerator-seconds at every request};
+\node[edge, anchor=north, text width=60mm] at (0,-12.5) {\textbf{batching and parallelism}\\batch: cheaper per request, slower per request\\fan out: faster per request, dearer per request};
+% freshness, the fourth axis
+\node[draw=rule, dashed, line width=0.5pt, rounded corners=1.5pt, align=center, inner sep=2.5pt, text=rule, font=\scriptsize] (F) at (0,10) {\textbf{Freshness}\\how old the model\\and its inputs\\may be};
+\draw[arr] (F.north) -- (0,32.5);
+\node[font=\tiny, text=rule, align=center, fill=white, inner sep=0.6pt] at (0,24) {staleness\\turns into\\quality};
+\draw[arr] (F.east) -- node[pos=0.66, above=0.2mm, sloped, font=\tiny, text=rule, inner sep=0.3pt] {cadence turns into cost} (30.5,3.5);
+\end{tikzpicture}
