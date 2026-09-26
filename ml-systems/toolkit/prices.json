@@ -1,0 +1,56 @@
+{
+  "_note": "Order-of-magnitude unit prices and capacities used by The Tradeoff Method for ML Systems, checked September 2026. The book prints quantities and ratios only; every price lives here. Edit this file, not ml_capacity.py, when prices move.",
+  "checked": "2026-09",
+  "compute": {
+    "core_usd_per_hour": 0.04,
+    "accelerator_rented_usd_per_hour": 2.50,
+    "accelerator_owned_usd_per_hour_at_full_use": 0.90,
+    "accelerator_to_core_ratio": 30,
+    "utilisation_breakeven_own_vs_rent": 0.36
+  },
+  "accelerator": {
+    "memory_gb": 80,
+    "bandwidth_tb_per_s": 2.0,
+    "prefill_tokens_per_s_mid_model": 50000,
+    "decode_tokens_per_s_mid_model_batched": 5000,
+    "kv_bytes_per_token_mid_model": 100000,
+    "weights_load_s_20gb": 60
+  },
+  "per_item_cost": {
+    "small_ranker_core_us": 30,
+    "small_ranker_accel_batched_us": 2,
+    "text_embedding_core_ms": 10,
+    "text_embedding_accel_batched_ms": 0.5,
+    "image_classifier_core_ms": 40,
+    "image_classifier_accel_batched_ms": 2,
+    "cross_encoder_20_pairs_accel_ms": 8,
+    "ann_query_100m_ms": 2,
+    "tree_ensemble_200_features_core_ms": 0.5
+  },
+  "tokens": {
+    "input_usd_per_million": 0.50,
+    "input_cached_usd_per_million": 0.10,
+    "output_usd_per_million": 2.00,
+    "embedding_usd_per_million": 0.05
+  },
+  "storage": {
+    "object_usd_per_tb_month": 20,
+    "ssd_usd_per_tb_month": 90,
+    "memory_usd_per_gb_month": 8,
+    "egress_usd_per_gb": 0.05
+  },
+  "vectors": {
+    "bytes_per_dim_fp32": 4,
+    "bytes_per_dim_int8": 1,
+    "graph_index_multiple": 2.5,
+    "cluster_index_multiple": 1.1
+  },
+  "labels": {
+    "human_judgement_usd_each": 1.0,
+    "reviewer_decisions_per_day": 300,
+    "reviewer_usd_per_hour": 30
+  },
+  "people": {
+    "engineer_usd_per_hour": 100
+  }
+}

@@ -1,0 +1,9 @@
+# Cost-and-capacity toolkit for ML serving
+
+Two forms of the same calculators, both reading one price file.
+
+**`ml_capacity_toolkit.xlsx`**: six tabs. *Unit prices* holds every price and per-accelerator capacity the book deliberately keeps off the page, in blue input cells; the other tabs read from it. *Fleet from a rate* turns items per second and a cost per item into cores or accelerators and a cost per thousand. *Generative serving* sizes the prefill and decode pools from the two facts of Chapter 8 (prefill compute-bound, decode memory-bound and capped by the in-flight state) and prices a request in accelerator-seconds and in rented tokens with the prefix cached. *Own vs rent* is the break-even utilisation. *Index and false matches* sizes a vector index and gives the per-pair false-match probability a threshold must deliver. *Labels, logs, cadence* sizes the served-feature log from the label delay, prices a retrain cadence, and sizes a judged set and a prevalence sample. Example values are the book's own (the recommender's ranker, the serving platform, the fraud log, near-duplicate search); replace them.
+
+**`ml_capacity.py`**: the same calculators as functions, reading `prices.json`, with no dependencies beyond the standard library. `python ml_capacity.py demo` reproduces the support assistant's bill (Chapter 8), the serving platform's fleet and its 16k-token case (Chapter 13), the fraud log (Chapter 6), the near-duplicate false-match budget (Chapter 12) and the two evaluation sizes (Chapters 9, 12). `python build_toolkit.py` regenerates the spreadsheet (needs `openpyxl`).
+
+Update prices in one place, `prices.json` or the *Unit prices* tab, when they move. The values are order-of-magnitude figures checked in September 2026; the book's quantities (Appendix A) change slowly, and the prices do not.
